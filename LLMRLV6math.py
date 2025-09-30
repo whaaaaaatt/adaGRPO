@@ -1,8 +1,8 @@
 from adaGRPO.AdaGRPOTrainer import *
 from adaGRPO.AdaGRPOTrainWithLoraManager import AdaGRPOTrainWithLoraManager
 
-model_path_or_name='../../AIRelated/model/Qwen3-1.7B'
-check_point_output_dir='../../AIRelated/mymodel/Qwen3-1.7B'
+model_path_or_name='../../../AIRelated/model/Qwen3-1.7B'
+check_point_output_dir='../../../AIRelated/mymodel/Qwen3-1.7B'
 train_dataset_path='./data/DAPO-Math-17k/DAPO-Math-17k-Processed-en-train-1000'
 
 def extract_hash_answer(text):
@@ -221,8 +221,8 @@ manager.init_GRPO(
     output_dir=check_point_output_dir,
     num_train_epochs=1,
     learning_rate=1e-5,
-    max_completion_length=8192,
-    num_generations=2,
+    max_completion_length=6144,
+    num_generations=4,
     per_device_train_batch_size=2,
     reward_funcs=[
         match_format_approximately,
@@ -243,17 +243,17 @@ manager.init_GRPO(
     # 3. At step 300, set the maximum retry times of adaGRPO to 16 and use temperature 1.0 for the first 8 retries and temperature 1.1 and top_p 0.99 for the remaining 8 retries
     # 4. At step 700, set the maximum retry times of adaGRPO to 32 and use temperature 1.0 for the first 10 retries, temperature 1.1 and top_p 0.99 for the next 11 retries,
     ada_sample_triggers=[
-        AdaSampleTrigger(1,4,[{"temperature":1.0} for i in range(4)]),
-        AdaSampleTrigger(100,8,
+        AdaSampleTrigger(1,2,[{"temperature":1.0} for i in range(2)]),
+        AdaSampleTrigger(100,4,
+                         [{"temperature":1.0} for i in range(2)]+[{"temperature":1.1,"top_p":0.99} for i in range(2)]
+                         ),
+        AdaSampleTrigger(300,8,
                          [{"temperature":1.0} for i in range(4)]+[{"temperature":1.1,"top_p":0.99} for i in range(4)]
                          ),
-        AdaSampleTrigger(300,16,
-                         [{"temperature":1.0} for i in range(8)]+[{"temperature":1.1,"top_p":0.99} for i in range(8)]
-                         ),
-        AdaSampleTrigger(700,32,
-                        [{"temperature":1.0} for i in range(10)]
-                        +[{"temperature":1.1,"top_p":0.99} for i in range(11)]
-                        +[{"temperature":1.3,"top_p":0.97} for i in range(11)]
+        AdaSampleTrigger(700,16,
+                        [{"temperature":1.0} for i in range(5)]
+                        +[{"temperature":1.1,"top_p":0.99} for i in range(6)]
+                        +[{"temperature":1.3,"top_p":0.97} for i in range(5)]
                         )
     ],
     ada_reward_judge_func=ada_reward_judge,
