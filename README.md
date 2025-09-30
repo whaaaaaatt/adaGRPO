@@ -113,7 +113,8 @@ Comparison:
   Simple chat GUI. Supports LoRA checkpoint loading, saving conversation, and generating `config.json`.
 
 * `EvaluateLLM.py`, `CheckEvalResMath.py`
-  Scripts for evaluating training results.
+  Scripts for evaluating training results.You can refer to and modify it as needed; here we only provide an example.
+
 
 ---
 

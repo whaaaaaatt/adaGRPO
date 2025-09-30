@@ -119,7 +119,7 @@
 
 * `EvaluateLLM.py`, `CheckEvalResMath.py`
 
-  * 用于评估训练效果。
+  * 用于评估训练效果，可自行参考修改，这里只给出一个例子。
 
 ---
 
